@@ -3,7 +3,9 @@
 .bg-primary {
     background-color: #000000;
 }
-
+.bg-danger {
+    background-color: #ac0101;
+}
 .bg-white {
     background-color: #ffffff;
 }

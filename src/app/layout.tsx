@@ -1,6 +1,6 @@
 import LayoutProvider from "../components/LayoutProvider";
 import "./globals.css";
-import "../stylesheets/commonClassess.css";
+import "@/stylesheets/commonClasses.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
