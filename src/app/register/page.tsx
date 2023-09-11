@@ -2,10 +2,22 @@
 import React from "react";
 import { Form, Button } from "antd";
 import Link from "next/link";
+import { message } from "antd";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
-  const onFinish = (values: any) => {
-    console.log(values);
+  const router = useRouter();
+  const onFinish = async (values: any) => {
+    try {
+      const response = await axios.post("/api/users/register", values);
+      message.success(response.data.message);
+      // router.push("/login");
+    } catch (error: any) {
+      message.error(
+        error.reponse.data.message || error.message || "something went wrong"
+      );
+    }
   };
   return (
     <div className="flex bg-danger justify-center items-center h-screen">
@@ -35,7 +47,7 @@ const Register = () => {
             >
               <input type="password" />
             </Form.Item>
-            <Button type="default" block htmlType="submit">
+            <Button type="primary" block htmlType="submit">
               Register
             </Button>
 
