@@ -28,7 +28,7 @@ export default async function Home() {
   //server side calling
   //const currentUser = await getCurrentUser();
   return (
-    <div>
+    <div className="p-5">
       <h2>car rental</h2>
       {/* server side rendering.... not needed here for now */}
       {/* {currentUser && <h2>welcome : {currentUser.email}</h2>} */}
