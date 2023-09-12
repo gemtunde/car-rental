@@ -13,13 +13,17 @@ export async function POST(request: NextRequest) {
     //check if user exist
     const user = await User.findOne({ email: reqBody.email });
     if (!user) {
-      throw new Error("user not found");
+      // throw new Error("user not found");
+      return NextResponse.json({ message: "user not found" }, { status: 500 });
     }
 
     //compare password
     let validPassword = await bcrypt.compare(reqBody.password, user.password);
     if (!validPassword) {
-      throw new Error("invalid password");
+      return NextResponse.json(
+        { message: "Invalid Password" },
+        { status: 500 }
+      );
     }
 
     const response = NextResponse.json({
