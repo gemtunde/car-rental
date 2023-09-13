@@ -49,7 +49,7 @@ const LayoutProvider = ({ children }: any) => {
     if (pathname !== "/login" && pathname !== "/register") {
       getCurrentUser();
     }
-  }, []);
+  }, [pathname]);
   return (
     <html lang="en">
       <head>

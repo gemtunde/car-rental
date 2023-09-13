@@ -4,14 +4,26 @@ import axios from "axios";
 import React from "react";
 import { useDispatch } from "react-redux";
 
-const CarForm = ({ showCarFormModal, setShowCarFormModal }: any) => {
+const CarForm = ({
+  showCarFormModal,
+  setShowCarFormModal,
+  reloadData,
+  selectedCar,
+}: any) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   //submit form
   const onFinish = async (values: any) => {
     try {
       dispatch(SetLoading(true));
-      const response = await axios.post("/api/cars", values);
+      let response = null;
+      if (selectedCar) {
+        values._id = selectedCar._id;
+        response = await axios.put(`/api/cars/${selectedCar._id}`, values);
+      } else {
+        response = await axios.post("/api/cars", values);
+      }
+      reloadData();
       message.success(response.data.message);
       setShowCarFormModal(false);
     } catch (error: any) {
@@ -22,6 +34,7 @@ const CarForm = ({ showCarFormModal, setShowCarFormModal }: any) => {
   };
   return (
     <Modal
+      width={800}
       open={showCarFormModal}
       onCancel={() => setShowCarFormModal(false)}
       centered
@@ -30,12 +43,15 @@ const CarForm = ({ showCarFormModal, setShowCarFormModal }: any) => {
         form.submit();
       }}
     >
-      <h1 className="text-center text-xl uppercase">Add a new Car</h1>
+      <h1 className="text-center text-xl uppercase">
+        {selectedCar ? `Edit Car : ${selectedCar.name}` : "Add a new Car"}
+      </h1>
       <Form
         layout="vertical"
         className="flex flex-col gap-5"
         onFinish={onFinish}
         form={form}
+        initialValues={selectedCar}
       >
         <Form.Item
           label="Car Name"

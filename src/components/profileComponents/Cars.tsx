@@ -9,6 +9,7 @@ import { SetLoading } from "@/redux/loadersSlice";
 const Cars = () => {
   const [showCarFormModal, setShowCarFormModal] = useState<any>(false);
   const [cars, setCars] = useState<any>([]);
+  const [selectedCar, setSelectedCar] = useState<any>(null);
 
   const dispatch = useDispatch();
 
@@ -27,6 +28,19 @@ const Cars = () => {
     getCars();
   }, []);
 
+  //delete car
+  const deleteCar = async (id: any) => {
+    try {
+      dispatch(SetLoading(true));
+      const response = await axios.delete(`/api/cars/${id}`);
+      message.success(response.data.message);
+      getCars();
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      dispatch(SetLoading(false));
+    }
+  };
   //table
   const columns = [
     {
@@ -46,8 +60,17 @@ const Cars = () => {
       dataIndex: "action",
       render: (_: any, record: any) => (
         <div className="flex gap-3">
-          <i className="ri-pencil-line"></i>
-          <i className="ri-delete-bin-line"></i>
+          <i
+            className="ri-pencil-line"
+            onClick={() => {
+              setSelectedCar(record);
+              setShowCarFormModal(true);
+            }}
+          ></i>
+          <i
+            className="ri-delete-bin-line"
+            onClick={() => deleteCar(record._id)}
+          ></i>
         </div>
       ),
     },
@@ -55,7 +78,13 @@ const Cars = () => {
   return (
     <div>
       <div className="flex justify-end">
-        <Button type="primary" onClick={() => setShowCarFormModal(true)}>
+        <Button
+          type="primary"
+          onClick={() => {
+            setSelectedCar(null);
+            setShowCarFormModal(true);
+          }}
+        >
           Add Car
         </Button>
       </div>
@@ -64,6 +93,8 @@ const Cars = () => {
         <CarForm
           setShowCarFormModal={setShowCarFormModal}
           showCarFormModal={showCarFormModal}
+          selectedCar={selectedCar}
+          reloadData={getCars}
         />
       )}
     </div>
