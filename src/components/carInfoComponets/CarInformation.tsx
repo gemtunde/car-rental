@@ -7,6 +7,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { SetLoading } from "@/redux/loadersSlice";
 import axios from "axios";
 
+//this works only for frontend
+import StripeCheckout from "react-stripe-checkout";
+
 const { RangePicker } = DatePicker;
 
 const CarInformation = ({ car }: any) => {
@@ -25,7 +28,7 @@ const CarInformation = ({ car }: any) => {
   const dispatch = useDispatch();
 
   //book now
-  const bookNow = async () => {
+  const bookNow = async (token: any) => {
     const payload = {
       car: car._id,
       user: currentUser._id,
@@ -35,6 +38,7 @@ const CarInformation = ({ car }: any) => {
       totalAmount:
         moment(toSlot).diff(moment(fromSlot), "hours") *
         Number(car?.rentPerHour),
+      token,
     };
     //console.log("payload", payload);
     try {
@@ -52,6 +56,7 @@ const CarInformation = ({ car }: any) => {
   useEffect(() => {
     setIsSlotAvailable(false);
   }, [fromSlot, toSlot]);
+
   //date or slot availability
   const checkAvailability = async () => {
     const payload = {
@@ -159,13 +164,26 @@ const CarInformation = ({ car }: any) => {
               >
                 Back
               </Button>
-              <Button
-                type="primary"
-                disabled={!fromSlot || !toSlot || !isSlotAvailable}
-                onClick={bookNow}
+              <StripeCheckout
+                stripeKey="pk_test_51HyacDJi1PTzZZm5a50YAgBwOdPKDsJu3yZosvpfgAcu2wivromrWHPwgvT2OzeveW3cfx0xuTTTPqQRNTpGHzuT00hXsMPUes"
+                token={bookNow}
+                currency="USD"
+                key={process.env.STRIPE_PUBLIC_KEY}
+                amount={
+                  moment(toSlot).diff(moment(fromSlot), "hours") *
+                  Number(car?.rentPerHour) *
+                  100
+                }
+                shippingAddress
               >
-                Book Now
-              </Button>
+                <Button
+                  type="primary"
+                  disabled={!fromSlot || !toSlot || !isSlotAvailable}
+                  // onClick={bookNow}
+                >
+                  Book Now
+                </Button>
+              </StripeCheckout>
             </div>
           </div>
         </Col>
