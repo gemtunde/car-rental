@@ -1,7 +1,7 @@
 "use client";
 import { Button, Col, Row, DatePicker, message } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { SetLoading } from "@/redux/loadersSlice";
@@ -10,6 +10,9 @@ import axios from "axios";
 const { RangePicker } = DatePicker;
 
 const CarInformation = ({ car }: any) => {
+  //date or slot availability
+  const [isSlotAvailable, setIsSlotAvailable] = useState<Boolean>(false);
+
   //date range picker values
   const [fromSlot, setFromSlot] = useState<any>(null);
   const [toSlot, setToSlot] = useState<any>(null);
@@ -39,6 +42,32 @@ const CarInformation = ({ car }: any) => {
       const response = await axios.post("/api/bookings", payload);
       message.success(response.data.message);
       router.push("/profile");
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      dispatch(SetLoading(false));
+    }
+  };
+  //if the date changes, set is slot available to false to start recalculation again
+  useEffect(() => {
+    setIsSlotAvailable(false);
+  }, [fromSlot, toSlot]);
+  //date or slot availability
+  const checkAvailability = async () => {
+    const payload = {
+      car: car._id,
+      fromSlot,
+      toSlot,
+    };
+    try {
+      dispatch(SetLoading(true));
+      const response: any = await axios.post("/api/checkAvailability", payload);
+      if (response.data.success) {
+        message.success("slot available");
+        setIsSlotAvailable(true);
+      } else {
+        throw new Error("slot not available");
+      }
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -116,6 +145,13 @@ const CarInformation = ({ car }: any) => {
 
             <div className="flex justify-end gap-5 my-10">
               <Button
+                type="primary"
+                onClick={checkAvailability}
+                disabled={!fromSlot && !toSlot}
+              >
+                Check Availability
+              </Button>
+              <Button
                 type="default"
                 onClick={() => {
                   router.back();
@@ -125,7 +161,7 @@ const CarInformation = ({ car }: any) => {
               </Button>
               <Button
                 type="primary"
-                disabled={!fromSlot && !toSlot}
+                disabled={!fromSlot || !toSlot || !isSlotAvailable}
                 onClick={bookNow}
               >
                 Book Now

@@ -38,7 +38,7 @@ const bookingSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-// check if car model is already created
+// check if booking model is already created
 if (mongoose.models.bookings) {
   const bookingModel = mongoose.model("bookings");
   mongoose.deleteModel(bookingModel.modelName);
