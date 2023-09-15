@@ -12,7 +12,10 @@ const Profile = () => {
   return (
     currentUser && (
       <div className="p-5">
-        <h1 className="text-md">Profile : {currentUser?.email}</h1>
+        <h1 className="text-md"> Profile : {currentUser?.email} </h1>
+        <h1 className="text-md">
+          Status : {currentUser?.isAdmin ? "Admin" : "User"}
+        </h1>
 
         <Tabs defaultActiveKey="1">
           {/* tabs for normal users */}
