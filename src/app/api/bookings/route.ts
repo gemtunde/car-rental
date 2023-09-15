@@ -46,3 +46,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }
+
+//get bookings
+export async function GET(request: NextRequest) {
+  try {
+    await validateTokenAndGetUserId(request);
+
+    //use searchparams to get filters from frontend
+    const { searchParams } = new URL(request.url);
+    const user = searchParams.get("user");
+
+    const response = await Booking.find({ user })
+      .populate("car")
+      .populate("user");
+
+    return NextResponse.json({ data: response }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+}

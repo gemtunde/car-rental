@@ -17,7 +17,7 @@ const Register = () => {
       dispatch(SetLoading(true));
       const response = await axios.post("/api/users/register", values);
       message.success(response.data.message);
-      // router.push("/login");
+      router.push("/login");
     } catch (error: any) {
       message.error(
         error.reponse.data.message || error.message || "something went wrong"
