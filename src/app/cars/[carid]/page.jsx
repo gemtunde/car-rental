@@ -3,7 +3,7 @@ import axios from "axios";
 import { cookies } from "next/headers";
 import React from "react";
 
-export async function getCar(carid: any) {
+export async function getCar(carid) {
   try {
     const cookieStore = cookies();
     const token = cookieStore.get("token")?.value;
@@ -17,12 +17,12 @@ export async function getCar(carid: any) {
       }
     );
     return response.data.data;
-  } catch (error: any) {
+  } catch (error) {
     return error.message;
   }
 }
 
-export default async function CardInfo({ params }: any) {
+export default async function CardInfo({ params }) {
   const car = await getCar(params?.carid);
   return (
     car && (
