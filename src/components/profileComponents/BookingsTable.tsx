@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 
-const UserBookings = () => {
+const BookingsTable = () => {
   const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
   const [showCancelModel, setShowCancelModel] = useState<boolean>(false);
@@ -18,7 +18,11 @@ const UserBookings = () => {
   const getData = async () => {
     try {
       dispatch(SetLoading(true));
-      const response = await axios.get(`/api/bookings?user=${currentUser._id}`);
+      let url = "/api/bookings";
+      if (!currentUser.isAdmin) {
+        url = `/api/bookings?user=${currentUser._id}`;
+      }
+      const response = await axios.get(url);
       setBookings(response.data.data);
     } catch (error: any) {
       message.error(error.message);
@@ -33,7 +37,8 @@ const UserBookings = () => {
 
   //columns
   const columns = [
-    { title: "Booking Id", dataIndex: "_id" },
+    // { title: "Booking Id", dataIndex: "_id" },
+    { title: "User", dataIndex: "user", render: (user: any) => user.name },
     { title: "Car", dataIndex: "car", render: (car: any) => car.name },
     { title: "Total Hours", dataIndex: "totalHours" },
     { title: "Total Amount", dataIndex: "totalAmount" },
@@ -113,4 +118,4 @@ const UserBookings = () => {
   );
 };
 
-export default UserBookings;
+export default BookingsTable;

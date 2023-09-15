@@ -56,7 +56,12 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const user = searchParams.get("user");
 
-    const response = await Booking.find({ user })
+    const filters: any = {};
+    if (user) {
+      filters.user = user;
+    }
+
+    const response = await Booking.find(filters)
       .populate("car")
       .populate("user");
 

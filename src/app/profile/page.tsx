@@ -1,8 +1,7 @@
 "use client";
-import AllBookings from "@/components/profileComponents/AllBookings";
+import BookingsTable from "@/components/profileComponents/BookingsTable";
 import Cars from "@/components/profileComponents/Cars";
 import General from "@/components/profileComponents/General";
-import UserBookings from "@/components/profileComponents/UserBookings";
 import Users from "@/components/profileComponents/Users";
 import { Tabs } from "antd";
 import React from "react";
@@ -23,7 +22,7 @@ const Profile = () => {
                 <General />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Bookings" key="2">
-                <UserBookings />
+                <BookingsTable />
               </Tabs.TabPane>
             </>
           )}
@@ -42,7 +41,7 @@ const Profile = () => {
                 <Users />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Bookings" key="4">
-                <AllBookings />
+                <BookingsTable />
               </Tabs.TabPane>
             </>
           )}

@@ -16,6 +16,13 @@ export async function POST(request: NextRequest) {
       // throw new Error("user not found");
       return NextResponse.json({ message: "user not found" }, { status: 500 });
     }
+    if (!user.isActive) {
+      // throw new Error("user not found");
+      return NextResponse.json(
+        { message: "user is inactive, pls contact Admin" },
+        { status: 400 }
+      );
+    }
 
     //compare password
     let validPassword = await bcrypt.compare(reqBody.password, user.password);
