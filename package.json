@@ -18,7 +18,7 @@
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.4",
-    "mongoose": "^14.20.1",
+    "mongoose": "^7.5.0",
     "next": "13.4.19",
     "nodemailer": "^6.9.5",
     "prop-types": "^15.8.1",
